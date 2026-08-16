@@ -1,0 +1,19 @@
+
+
+services:
+  secureportal:
+    build: .
+    container_name: secureportal
+    ports:
+      - "9090:80"       # Visit http://localhost:8080
+    restart: unless-stopped
+    volumes:
+      # Optional: live-reload during development (comment out for production)
+      - ./login.html:/usr/share/nginx/html/login.html:ro
+      - ./admin_dashboard.html:/usr/share/nginx/html/admin_dashboard.html:ro
+      - ./employee_dashboard.html:/usr/share/nginx/html/employee_dashboard.html:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

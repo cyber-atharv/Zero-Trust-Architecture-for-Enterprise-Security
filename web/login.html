@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SecurePortal — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0b0f1a;
+      --panel:     #111827;
+      --border:    #1e2d45;
+      --accent:    #3b82f6;
+      --accent2:   #6366f1;
+      --success:   #10b981;
+      --danger:    #ef4444;
+      --text:      #f1f5f9;
+      --muted:     #64748b;
+      --input-bg:  #0d1424;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* animated grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes gridMove { to { background-position: 0 48px, 48px 0; } }
+
+    /* orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+    }
+    .orb-1 { width:400px;height:400px;background:rgba(59,130,246,.12);top:-100px;left:-100px; }
+    .orb-2 { width:300px;height:300px;background:rgba(99,102,241,.1);bottom:-80px;right:-80px; }
+
+    .card {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 44px 40px;
+      box-shadow: 0 0 60px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.03) inset;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
+    .logo-text span { color: var(--accent); }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+
+    .field { margin-bottom: 20px; }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #94a3b8;
+      margin-bottom: 7px;
+      letter-spacing: .3px;
+    }
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-wrap .icon {
+      position: absolute;
+      left: 14px;
+      color: var(--muted);
+      font-size: 15px;
+      pointer-events: none;
+    }
+    input[type=text], input[type=password] {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px 12px 40px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+    }
+    .toggle-pw {
+      position: absolute;
+      right: 14px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+    }
+    .toggle-pw:hover { color: var(--text); }
+
+    .hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 22px;
+      padding: 12px;
+      background: rgba(255,255,255,.03);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      line-height: 1.8;
+    }
+    .hint strong { color: var(--accent); }
+
+    button.btn-login {
+      width: 100%;
+      margin-top: 24px;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      letter-spacing: .3px;
+      transition: opacity .2s, transform .1s;
+    }
+    button.btn-login:hover { opacity: .9; }
+    button.btn-login:active { transform: scale(.99); }
+
+    .error-msg {
+      display: none;
+      background: rgba(239,68,68,.1);
+      border: 1px solid rgba(239,68,68,.3);
+      color: #fca5a5;
+      font-size: 13px;
+      padding: 11px 14px;
+      border-radius: 9px;
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 28px;
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">🔐</div>
+      <div class="logo-text">Secure<span>Portal</span></div>
+    </div>
+
+    <h1>Welcome back</h1>
+    <p class="subtitle">Sign in to access your dashboard</p>
+
+    <div class="field">
+      <label for="username">Username</label>
+      <div class="input-wrap">
+        <span class="icon">👤</span>
+        <input type="text" id="username" placeholder="Enter your username" autocomplete="off"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <div class="input-wrap">
+        <span class="icon">🔑</span>
+        <input type="password" id="password" placeholder="Enter your password"/>
+        <button class="toggle-pw" onclick="togglePw()" type="button" id="eyeBtn">👁</button>
+      </div>
+    </div>
+
+    <div class="hint">
+      <strong>Admin:</strong> username <code>admin</code> / password <code>admin123</code><br>
+      <strong>Employee:</strong> username <code>employee</code> / password <code>emp123</code>
+    </div>
+
+    <button class="btn-login" onclick="doLogin()">Sign In →</button>
+    <div class="error-msg" id="errMsg">⚠️ Incorrect credentials. Please try again.</div>
+
+    <p class="footer-note">Unauthorized access is strictly prohibited.</p>
+  </div>
+
+  <script>
+    const USERS = {
+      admin:    { password: 'admin123',   role: 'admin',    redirect: 'admin_dashboard.html' },
+      employee: { password: 'emp123',     role: 'employee', redirect: 'employee_dashboard.html' }
+    };
+
+    function doLogin() {
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+      const err = document.getElementById('errMsg');
+
+      err.style.display = 'none';
+
+      if (!u || !p) {
+        err.textContent = '⚠️ Please enter both username and password.';
+        err.style.display = 'block';
+        return;
+      }
+
+      const user = USERS[u];
+      if (!user || user.password !== p) {
+        err.textContent = '⚠️ Incorrect credentials. Access denied.';
+        err.style.display = 'block';
+        document.getElementById('password').value = '';
+        return;
+      }
+
+      // Store session in sessionStorage
+      sessionStorage.setItem('auth_user', u);
+      sessionStorage.setItem('auth_role', user.role);
+      sessionStorage.setItem('auth_time', Date.now());
+
+      window.location.href = user.redirect;
+    }
+
+    function togglePw() {
+      const inp = document.getElementById('password');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    // If already logged in, redirect
+    const role = sessionStorage.getItem('auth_role');
+    if (role === 'admin')    window.location.href = 'admin_dashboard.html';
+    if (role === 'employee') window.location.href = 'employee_dashboard.html';
+  </script>
+</body>
+</html>
