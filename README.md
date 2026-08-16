@@ -23,10 +23,11 @@
 
 ---
 
-## 👤 Project Information
+## 👤 Author Information
 
 | 🏷️ Field | 📝 Details |
 | :--- | :--- |
+| **Name** | Atharv Hogade |
 | **Organization** | Novitech Solution Pvt Ltd |
 | **Domain** | Cybersecurity · Zero Trust Architecture |
 | **Year** | 2026 |
@@ -203,5 +204,5 @@ This project is licensed under the **MIT License** — free to use, modify, and 
 
 <p align="center">
   <b>Zero Trust Architecture · Cybersecurity</b><br/>
-  Novitech Solution Pvt Ltd
+  Atharv Hogade | Novitech Solution Pvt Ltd
 </p>
