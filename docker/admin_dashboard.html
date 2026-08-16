@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Command Center — SecurePortal</title>
+  <meta name="description" content="SecurePortal Admin Command Center — Zero Trust security monitoring and user management dashboard"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:         #05080f;
+      --surface:    #0a1020;
+      --surface2:   #0f172a;
+      --glass:      rgba(15, 23, 42, 0.6);
+      --border:     rgba(56, 189, 248, 0.1);
+      --border-h:   rgba(56, 189, 248, 0.25);
+      --cyan:       #06b6d4;
+      --cyan-glow:  rgba(6, 182, 212, 0.12);
+      --blue:       #3b82f6;
+      --indigo:     #6366f1;
+      --emerald:    #10b981;
+      --amber:      #f59e0b;
+      --rose:       #f43f5e;
+      --text:       #e2e8f0;
+      --muted:      #64748b;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Subtle background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(6,182,212,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(99,102,241,0.03) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(6,182,212,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6,182,212,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* ── TOP NAV BAR ── */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 64px;
+      background: rgba(10, 16, 32, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--cyan), var(--indigo));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 0 16px rgba(6,182,212,0.15);
+    }
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .logo-text span { color: var(--cyan); }
+
+    .nav-links {
+      display: flex;
+      gap: 4px;
+    }
+    .nav-link {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .nav-link.active {
+      color: var(--cyan);
+      background: var(--cyan-glow);
+      border-color: rgba(6,182,212,0.15);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .system-status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      background: rgba(16,185,129,0.06);
+      border: 1px solid rgba(16,185,129,0.15);
+      border-radius: 20px;
+      font-size: 11px;
+      color: var(--emerald);
+      font-weight: 500;
+    }
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .nav-avatar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 12px 6px 6px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .nav-avatar:hover { background: rgba(255,255,255,0.03); }
+    .avatar-circle {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--indigo));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+    }
+    .avatar-info { text-align: right; }
+    .avatar-name { font-size: 12px; font-weight: 600; }
+    .avatar-role { font-size: 10px; color: var(--muted); }
+
+    .btn-signout {
+      padding: 7px 16px;
+      background: rgba(244,63,94,0.08);
+      border: 1px solid rgba(244,63,94,0.15);
+      border-radius: 8px;
+      color: #fda4af;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-signout:hover { background: rgba(244,63,94,0.15); border-color: rgba(244,63,94,0.3); }
+
+    /* ── MAIN CONTENT ── */
+    .content {
+      padding: 28px 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Page header */
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .page-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+    .page-header p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .header-btn {
+      padding: 9px 18px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(12px);
+    }
+    .header-btn:hover { border-color: var(--border-h); background: rgba(6,182,212,0.05); }
+    .header-btn.primary {
+      background: linear-gradient(135deg, var(--cyan), var(--indigo));
+      border-color: transparent;
+      color: #fff;
+    }
+    .header-btn.primary:hover { box-shadow: 0 4px 20px rgba(6,182,212,0.2); }
+
+    /* ── STAT CARDS (Bento Grid) ── */
+    .bento-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .stat-card:hover {
+      border-color: var(--border-h);
+      transform: translateY(-2px);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      border-radius: 16px 16px 0 0;
+    }
+    .stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+    .stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--emerald), transparent); }
+    .stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--amber), transparent); }
+    .stat-card:nth-child(4)::before { background: linear-gradient(90deg, var(--rose), transparent); }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .stat-icon-wrap {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px;
+    }
+    .stat-trend {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .trend-up { color: var(--emerald); background: rgba(16,185,129,0.1); }
+    .trend-down { color: var(--rose); background: rgba(244,63,94,0.1); }
+    .trend-live { color: var(--cyan); background: var(--cyan-glow); }
+
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .stat-mini-chart {
+      margin-top: 12px;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 28px;
+    }
+    .mini-bar {
+      flex: 1;
+      border-radius: 2px;
+      min-height: 3px;
+      transition: height 0.3s;
+    }
+
+    /* ── MAIN GRID (3-col bento) ── */
+    .bento-main {
+      display: grid;
+      grid-template-columns: 1fr 1fr 350px;
+      grid-template-rows: auto auto;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1100px) {
+      .bento-main { grid-template-columns: 1fr 1fr; }
+      .bento-main .span-right { grid-column: auto; }
+    }
+    @media (max-width: 768px) {
+      .bento-stats { grid-template-columns: 1fr 1fr; }
+      .bento-main { grid-template-columns: 1fr; }
+    }
+
+    /* Panel (glass cards) */
+    .panel {
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      transition: border-color 0.3s;
+    }
+    .panel:hover { border-color: var(--border-h); }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .panel-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--cyan-glow);
+      color: var(--cyan);
+    }
+    .panel-action {
+      font-size: 12px;
+      color: var(--cyan);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .panel-action:hover { color: #22d3ee; }
+
+    .span-right {
+      grid-row: 1 / 3;
+      grid-column: 3;
+    }
+
+    /* ── ACTIVITY LIST ── */
+    .activity-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(5,8,15,0.5);
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .activity-item:hover {
+      border-color: var(--border);
+      background: rgba(6,182,212,0.02);
+    }
+    .act-indicator {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .act-indicator.success { background: rgba(16,185,129,0.1); }
+    .act-indicator.warning { background: rgba(245,158,11,0.1); }
+    .act-indicator.danger  { background: rgba(244,63,94,0.1); }
+    .act-indicator.info    { background: var(--cyan-glow); }
+
+    .act-content { flex: 1; min-width: 0; }
+    .act-title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .act-meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .act-time {
+      font-size: 10px;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 3px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── SECURITY LOGS (Terminal style) ── */
+    .security-terminal {
+      background: rgba(5,8,15,0.6);
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+    .security-terminal::-webkit-scrollbar { width: 4px; }
+    .security-terminal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .term-line {
+      padding: 6px 0;
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+    }
+    .term-time { color: var(--muted); min-width: 56px; }
+    .term-severity {
+      min-width: 52px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      padding-top: 1px;
+    }
+    .sev-crit { color: var(--rose); }
+    .sev-warn { color: var(--amber); }
+    .sev-info { color: var(--cyan); }
+    .sev-ok   { color: var(--emerald); }
+    .term-msg { color: var(--text); flex: 1; }
+
+    /* ── USERS TABLE ── */
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .users-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 0 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .users-table td {
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      font-size: 13px;
+    }
+    .users-table tr:hover td { background: rgba(6,182,212,0.02); }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-av {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .user-name { font-weight: 600; }
+    .user-handle { font-size: 11px; color: var(--muted); }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .pill-active { background: rgba(16,185,129,0.1); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.15); }
+    .pill-inactive { background: rgba(245,158,11,0.1); color: #fcd34d; border: 1px solid rgba(245,158,11,0.15); }
+    .pill-locked { background: rgba(244,63,94,0.1); color: #fda4af; border: 1px solid rgba(244,63,94,0.15); }
+
+    .table-action {
+      font-size: 12px;
+      color: var(--cyan);
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .table-action:hover { background: var(--cyan-glow); }
+
+    /* ── ADMIN CONTROLS ── */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .ctrl-btn {
+      padding: 16px;
+      background: rgba(5,8,15,0.5);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .ctrl-btn:hover {
+      border-color: var(--border-h);
+      background: rgba(6,182,212,0.04);
+      transform: translateY(-1px);
+    }
+    .ctrl-btn .cico {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .ctrl-btn .ctrl-desc {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .ctrl-btn.danger:hover {
+      border-color: rgba(244,63,94,0.3);
+      background: rgba(244,63,94,0.04);
+    }
+
+    /* ── BOTTOM GRID ── */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+      .bottom-grid { grid-template-columns: 1fr; }
+      .controls-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--emerald);
+      color: #6ee7b7;
+      font-size: 13px;
+      padding: 14px 22px;
+      border-radius: 12px;
+      display: none;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      animation: slideUp 0.35s ease;
+      z-index: 200;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAVIGATION -->
+<nav class="top-nav">
+  <div class="nav-left">
+    <div class="logo">
+      <div class="logo-icon">🔐</div>
+      <div class="logo-text">Secure<span>Portal</span></div>
+    </div>
+    <div class="nav-links">
+      <div class="nav-link active">🏠 Dashboard</div>
+      <div class="nav-link">👥 Users</div>
+      <div class="nav-link">📊 Analytics</div>
+      <div class="nav-link">🔒 Security</div>
+      <div class="nav-link">🛡️ Policies</div>
+      <div class="nav-link">⚙️ Settings</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="system-status">
+      <div class="status-dot"></div>
+      All Systems Operational
+    </div>
+    <div class="nav-avatar">
+      <div class="avatar-info">
+        <div class="avatar-name">Admin</div>
+        <div class="avatar-role">Administrator</div>
+      </div>
+      <div class="avatar-circle">A</div>
+    </div>
+    <button class="btn-signout" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1>Command Center</h1>
+      <p id="greetLine"></p>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="showToast('Report generated')">📊 Generate Report</button>
+      <button class="header-btn primary" onclick="showToast('System scan initiated')">🛡️ Security Scan</button>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="bento-stats">
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon-wrap" style="background:var(--cyan-glow);">👥</div>
+        <span class="stat-trend trend-up">+12%</span>
+      </div>
+      <div class="stat-value">248</div>
+      <div class="stat-label">Total Users</div>
+      <div class="stat-mini-chart">
+        <div class="mini-bar" style="height:40%;background:rgba(6,182,212,0.3);"></div>
+        <div class="mini-bar" style="height:55%;background:rgba(6,182,212,0.35);"></div>
+        <div class="mini-bar" style="height:35%;background:rgba(6,182,212,0.3);"></div>
+        <div class="mini-bar" style="height:70%;background:rgba(6,182,212,0.4);"></div>
+        <div class="mini-bar" style="height:60%;background:rgba(6,182,212,0.35);"></div>
+        <div class="mini-bar" style="height:85%;background:rgba(6,182,212,0.45);"></div>
+        <div class="mini-bar" style="height:100%;background:var(--cyan);"></div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon-wrap" style="background:rgba(16,185,129,0.1);">🟢</div>
+        <span class="stat-trend trend-live">● Live</span>
+      </div>
+      <div class="stat-value" id="sessionCount">1</div>
+      <div class="stat-label">Active Sessions</div>
+      <div class="stat-mini-chart">
+        <div class="mini-bar" style="height:20%;background:rgba(16,185,129,0.3);"></div>
+        <div class="mini-bar" style="height:30%;background:rgba(16,185,129,0.3);"></div>
+        <div class="mini-bar" style="height:45%;background:rgba(16,185,129,0.35);"></div>
+        <div class="mini-bar" style="height:25%;background:rgba(16,185,129,0.3);"></div>
+        <div class="mini-bar" style="height:60%;background:rgba(16,185,129,0.4);"></div>
+        <div class="mini-bar" style="height:40%;background:rgba(16,185,129,0.35);"></div>
+        <div class="mini-bar" style="height:55%;background:var(--emerald);"></div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon-wrap" style="background:rgba(245,158,11,0.1);">🔑</div>
+        <span class="stat-trend trend-up">+3</span>
+      </div>
+      <div class="stat-value">47</div>
+      <div class="stat-label">Logins Today</div>
+      <div class="stat-mini-chart">
+        <div class="mini-bar" style="height:60%;background:rgba(245,158,11,0.3);"></div>
+        <div class="mini-bar" style="height:45%;background:rgba(245,158,11,0.3);"></div>
+        <div class="mini-bar" style="height:80%;background:rgba(245,158,11,0.4);"></div>
+        <div class="mini-bar" style="height:50%;background:rgba(245,158,11,0.35);"></div>
+        <div class="mini-bar" style="height:90%;background:rgba(245,158,11,0.45);"></div>
+        <div class="mini-bar" style="height:70%;background:rgba(245,158,11,0.4);"></div>
+        <div class="mini-bar" style="height:100%;background:var(--amber);"></div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon-wrap" style="background:rgba(244,63,94,0.1);">⚠️</div>
+        <span class="stat-trend trend-down">2 new</span>
+      </div>
+      <div class="stat-value">2</div>
+      <div class="stat-label">Security Alerts</div>
+      <div class="stat-mini-chart">
+        <div class="mini-bar" style="height:30%;background:rgba(244,63,94,0.3);"></div>
+        <div class="mini-bar" style="height:15%;background:rgba(244,63,94,0.25);"></div>
+        <div class="mini-bar" style="height:50%;background:rgba(244,63,94,0.35);"></div>
+        <div class="mini-bar" style="height:10%;background:rgba(244,63,94,0.25);"></div>
+        <div class="mini-bar" style="height:20%;background:rgba(244,63,94,0.3);"></div>
+        <div class="mini-bar" style="height:45%;background:rgba(244,63,94,0.35);"></div>
+        <div class="mini-bar" style="height:35%;background:var(--rose);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN BENTO GRID -->
+  <div class="bento-main">
+    <!-- Login Activity -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Login Activity <span class="panel-badge">Live</span></div>
+        <span class="panel-action">View all →</span>
+      </div>
+      <div class="activity-feed">
+        <div class="activity-item">
+          <div class="act-indicator success">✓</div>
+          <div class="act-content">
+            <div class="act-title">admin logged in</div>
+            <div class="act-meta">Dashboard access granted · 192.168.1.10</div>
+          </div>
+          <span class="act-time">now</span>
+        </div>
+        <div class="activity-item">
+          <div class="act-indicator success">✓</div>
+          <div class="act-content">
+            <div class="act-title">employee logged in</div>
+            <div class="act-meta">Employee portal · 192.168.1.22</div>
+          </div>
+          <span class="act-time">14m</span>
+        </div>
+        <div class="activity-item">
+          <div class="act-indicator danger">✕</div>
+          <div class="act-content">
+            <div class="act-title">Unknown user — failed auth</div>
+            <div class="act-meta">Invalid credentials · 10.0.0.45</div>
+          </div>
+          <span class="act-time">1h</span>
+        </div>
+        <div class="activity-item">
+          <div class="act-indicator warning">!</div>
+          <div class="act-content">
+            <div class="act-title">Unauthorised URL attempt</div>
+            <div class="act-meta">Redirected to login · 10.0.0.88</div>
+          </div>
+          <span class="act-time">3h</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Registered Users</div>
+        <span class="panel-action">+ Add User</span>
+      </div>
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-av" style="background:linear-gradient(135deg,var(--cyan),var(--indigo));">A</div>
+                <div>
+                  <div class="user-name">Admin</div>
+                  <div class="user-handle">@admin</div>
+                </div>
+              </div>
+            </td>
+            <td>Administrator</td>
+            <td><span class="status-pill pill-active">● Active</span></td>
+            <td><span class="table-action">Manage</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-av" style="background:linear-gradient(135deg,var(--indigo),#8b5cf6);">J</div>
+                <div>
+                  <div class="user-name">John Employee</div>
+                  <div class="user-handle">@employee</div>
+                </div>
+              </div>
+            </td>
+            <td>Employee</td>
+            <td><span class="status-pill pill-active">● Active</span></td>
+            <td><span class="table-action">Manage</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-av" style="background:linear-gradient(135deg,var(--amber),#ea580c);">G</div>
+                <div>
+                  <div class="user-name">Guest Account</div>
+                  <div class="user-handle">@guest01</div>
+                </div>
+              </div>
+            </td>
+            <td>Viewer</td>
+            <td><span class="status-pill pill-inactive">○ Inactive</span></td>
+            <td><span class="table-action">Manage</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Security Logs (Terminal style) — Right column spanning 2 rows -->
+    <div class="panel span-right">
+      <div class="panel-head">
+        <div class="panel-title">🔒 Security Logs <span class="panel-badge">Terminal</span></div>
+        <span class="panel-action">Export</span>
+      </div>
+      <div class="security-terminal">
+        <div class="term-line">
+          <span class="term-time">09:41</span>
+          <span class="term-severity sev-crit">CRIT</span>
+          <span class="term-msg">Brute-force blocked — IP 192.168.1.45</span>
+        </div>
+        <div class="term-line">
+          <span class="term-time">08:15</span>
+          <span class="term-severity sev-warn">WARN</span>
+          <span class="term-msg">Role escalation blocked: employee → admin</span>
+        </div>
+        <div class="term-line">
+          <span class="term-time">07:30</span>
+          <span class="term-severity sev-info">INFO</span>
+          <span class="term-msg">Session token refreshed — admin</span>
+        </div>
+        <div class="term-line">
+          <span class="term-time">06:00</span>
+          <span class="term-severity sev-ok">OK</span>
+          <span class="term-msg">System backup completed — 2.4 GB</span>
+        </div>
+        <div class="term-line">
+          <span class="term-time">05:45</span>
+          <span class="term-severity sev-info">INFO</span>
+          <span class="term-msg">TLS certificate rotation — valid 90d</span>
+        </div>
+        <div class="term-line">
+          <span class="term-time">04:22</span>
+          <span class="term-severity sev-ok">OK</span>
+          <span class="term-msg">Firewall rules updated — 14 rules</span>
+        </div>
+        <div class="term-line">
+          <span class="term-time">03:10</span>
+          <span class="term-severity sev-warn">WARN</span>
+          <span class="term-msg">Unusual login pattern — geo mismatch</span>
+        </div>
+        <div class="term-line">
+          <span class="term-time">02:00</span>
+          <span class="term-severity sev-ok">OK</span>
+          <span class="term-msg">Intrusion detection scan — 0 threats</span>
+        </div>
+        <div class="term-line">
+          <span class="term-time">01:30</span>
+          <span class="term-severity sev-info">INFO</span>
+          <span class="term-msg">API rate limit enforced — /auth endpoint</span>
+        </div>
+        <div class="term-line">
+          <span class="term-time">00:45</span>
+          <span class="term-severity sev-ok">OK</span>
+          <span class="term-msg">Daily security audit — PASS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM GRID: Admin Controls -->
+  <div class="bottom-grid">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">⚡ Admin Controls</div>
+      </div>
+      <div class="controls-grid">
+        <button class="ctrl-btn" onclick="showToast('User management opened')">
+          <span class="cico">👤</span>Manage Users
+          <span class="ctrl-desc">Add, edit, remove users</span>
+        </button>
+        <button class="ctrl-btn" onclick="showToast('System report generated')">
+          <span class="cico">📊</span>Generate Report
+          <span class="ctrl-desc">Export analytics data</span>
+        </button>
+        <button class="ctrl-btn" onclick="showToast('Backup initiated')">
+          <span class="cico">💾</span>Backup Data
+          <span class="ctrl-desc">Full system snapshot</span>
+        </button>
+        <button class="ctrl-btn" onclick="showToast('All sessions cleared')">
+          <span class="cico">🔄</span>Clear Sessions
+          <span class="ctrl-desc">Invalidate all tokens</span>
+        </button>
+        <button class="ctrl-btn" onclick="showToast('Audit log exported')">
+          <span class="cico">📋</span>Audit Logs
+          <span class="ctrl-desc">Download full audit trail</span>
+        </button>
+        <button class="ctrl-btn danger" onclick="showToast('System locked down!')">
+          <span class="cico">🔒</span>Lock System
+          <span class="ctrl-desc">Emergency lockdown</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Metrics -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">📈 System Health</div>
+        <span class="panel-action">Details →</span>
+      </div>
+      <div class="activity-feed">
+        <div class="activity-item">
+          <div class="act-indicator info">🖥</div>
+          <div class="act-content">
+            <div class="act-title">CPU Usage</div>
+            <div class="act-meta">
+              <div style="background:rgba(6,182,212,0.1);height:6px;border-radius:3px;margin-top:6px;">
+                <div style="background:var(--cyan);height:100%;width:23%;border-radius:3px;"></div>
+              </div>
+            </div>
+          </div>
+          <span class="act-time">23%</span>
+        </div>
+        <div class="activity-item">
+          <div class="act-indicator info">💾</div>
+          <div class="act-content">
+            <div class="act-title">Memory Usage</div>
+            <div class="act-meta">
+              <div style="background:rgba(16,185,129,0.1);height:6px;border-radius:3px;margin-top:6px;">
+                <div style="background:var(--emerald);height:100%;width:61%;border-radius:3px;"></div>
+              </div>
+            </div>
+          </div>
+          <span class="act-time">61%</span>
+        </div>
+        <div class="activity-item">
+          <div class="act-indicator info">💿</div>
+          <div class="act-content">
+            <div class="act-title">Storage</div>
+            <div class="act-meta">
+              <div style="background:rgba(245,158,11,0.1);height:6px;border-radius:3px;margin-top:6px;">
+                <div style="background:var(--amber);height:100%;width:45%;border-radius:3px;"></div>
+              </div>
+            </div>
+          </div>
+          <span class="act-time">45%</span>
+        </div>
+        <div class="activity-item">
+          <div class="act-indicator success">🌐</div>
+          <div class="act-content">
+            <div class="act-title">Network Latency</div>
+            <div class="act-meta">
+              <div style="background:rgba(16,185,129,0.1);height:6px;border-radius:3px;margin-top:6px;">
+                <div style="background:var(--emerald);height:100%;width:12%;border-radius:3px;"></div>
+              </div>
+            </div>
+          </div>
+          <span class="act-time">12ms</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── ACCESS CONTROL ──
+  (function guard(){
+    const role = sessionStorage.getItem('auth_role');
+    if (!role) { window.location.href = 'login.html'; return; }
+    if (role !== 'admin') {
+      sessionStorage.setItem('access_denied_msg', 'You do not have admin privileges.');
+      window.location.href = 'login.html';
+    }
+  })();
+
+  // Greet
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greetLine').textContent = greet + ', Admin — here\'s your system overview.';
+
+  function logout(){
+    sessionStorage.clear();
+    window.location.href = 'login.html';
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = '✅ ' + msg;
+    t.style.display = 'block';
+    setTimeout(()=>{ t.style.display = 'none'; }, 2800);
+  }
+</script>
+</body>
+</html>

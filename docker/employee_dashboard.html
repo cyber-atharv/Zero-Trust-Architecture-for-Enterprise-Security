@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Employee Workspace — SecurePortal</title>
+  <meta name="description" content="SecurePortal Employee Workspace — Secure task management and collaboration portal"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:         #05080f;
+      --surface:    #0a1020;
+      --surface2:   #0f172a;
+      --glass:      rgba(15, 23, 42, 0.6);
+      --border:     rgba(139, 92, 246, 0.1);
+      --border-h:   rgba(139, 92, 246, 0.25);
+      --violet:     #8b5cf6;
+      --violet-glow:rgba(139, 92, 246, 0.12);
+      --indigo:     #6366f1;
+      --cyan:       #06b6d4;
+      --emerald:    #10b981;
+      --amber:      #f59e0b;
+      --rose:       #f43f5e;
+      --text:       #e2e8f0;
+      --muted:      #64748b;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Subtle background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 0%, rgba(139,92,246,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 100%, rgba(6,182,212,0.03) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(139,92,246,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139,92,246,0.015) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 64px;
+      background: rgba(10, 16, 32, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--violet), var(--indigo));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 0 16px rgba(139,92,246,0.15);
+    }
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .logo-text span { color: var(--violet); }
+
+    .nav-links {
+      display: flex;
+      gap: 4px;
+    }
+    .nav-link {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .nav-link.active {
+      color: var(--violet);
+      background: var(--violet-glow);
+      border-color: rgba(139,92,246,0.15);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .session-chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      background: var(--violet-glow);
+      border: 1px solid rgba(139,92,246,0.15);
+      border-radius: 20px;
+      font-size: 11px;
+      color: #c4b5fd;
+      font-weight: 500;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .nav-avatar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 12px 6px 6px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .nav-avatar:hover { background: rgba(255,255,255,0.03); }
+    .avatar-circle {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--violet), var(--indigo));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+    }
+    .avatar-info { text-align: right; }
+    .avatar-name { font-size: 12px; font-weight: 600; }
+    .avatar-role { font-size: 10px; color: var(--muted); }
+
+    .btn-signout {
+      padding: 7px 16px;
+      background: rgba(244,63,94,0.08);
+      border: 1px solid rgba(244,63,94,0.15);
+      border-radius: 8px;
+      color: #fda4af;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-signout:hover { background: rgba(244,63,94,0.15); border-color: rgba(244,63,94,0.3); }
+
+    /* ── MAIN CONTENT ── */
+    .content {
+      padding: 28px 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Page header */
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .page-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+    .page-header p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── STAT CARDS ── */
+    .bento-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .stat-card:hover {
+      border-color: var(--border-h);
+      transform: translateY(-2px);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      border-radius: 16px 16px 0 0;
+    }
+    .stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--violet), transparent); }
+    .stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--emerald), transparent); }
+    .stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--amber), transparent); }
+    .stat-card:nth-child(4)::before { background: linear-gradient(90deg, var(--rose), transparent); }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .stat-icon-wrap {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px;
+    }
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── Panel (glass cards) ── */
+    .panel {
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      transition: border-color 0.3s;
+    }
+    .panel:hover { border-color: var(--border-h); }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .panel-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--violet-glow);
+      color: var(--violet);
+    }
+    .panel-count {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── MAIN BENTO GRID ── */
+    .bento-main {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1000px) {
+      .bento-stats { grid-template-columns: 1fr 1fr; }
+      .bento-main { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .bento-stats { grid-template-columns: 1fr; }
+    }
+
+    /* ── TASK LIST ── */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(5,8,15,0.5);
+      border: 1px solid transparent;
+      transition: all 0.25s;
+      cursor: default;
+    }
+    .task-row:hover {
+      border-color: var(--border);
+      background: rgba(139,92,246,0.02);
+    }
+    .task-check {
+      width: 22px; height: 22px;
+      border-radius: 7px;
+      border: 2px solid rgba(139,92,246,0.2);
+      background: transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      transition: all 0.25s;
+    }
+    .task-check:hover { border-color: var(--violet); }
+    .task-check.done {
+      background: var(--emerald);
+      border-color: var(--emerald);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(16,185,129,0.3);
+    }
+    .task-info { flex: 1; min-width: 0; }
+    .task-title {
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.25s;
+    }
+    .task-title.done-text {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+    .task-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .priority {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .p-high { background: rgba(244,63,94,0.1); color: #fda4af; border: 1px solid rgba(244,63,94,0.15); }
+    .p-med  { background: rgba(245,158,11,0.1); color: #fcd34d; border: 1px solid rgba(245,158,11,0.15); }
+    .p-low  { background: rgba(16,185,129,0.1); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.15); }
+
+    /* ── RIGHT COLUMN ── */
+    .right-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Session Timer */
+    .session-box {
+      text-align: center;
+      padding: 24px 20px;
+    }
+    .session-clock {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 48px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--violet), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 3px;
+    }
+    .session-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    .progress-wrap {
+      margin-top: 16px;
+      background: rgba(139,92,246,0.08);
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--violet), var(--cyan));
+      transition: width 1s;
+    }
+    .session-detail {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 10px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Report form */
+    textarea {
+      width: 100%;
+      background: rgba(5,8,15,0.5);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      resize: vertical;
+      min-height: 100px;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    textarea:focus {
+      border-color: var(--violet);
+      box-shadow: 0 0 0 3px var(--violet-glow);
+    }
+    textarea::placeholder { color: #475569; }
+
+    .btn-submit {
+      margin-top: 12px;
+      padding: 11px 24px;
+      background: linear-gradient(135deg, var(--violet), var(--indigo));
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s;
+    }
+    .btn-submit:hover::before { left: 100%; }
+    .btn-submit:hover { box-shadow: 0 4px 20px rgba(139,92,246,0.2); }
+
+    /* ── BOTTOM GRID ── */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+      .bottom-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Completed tasks */
+    .completed-placeholder {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Quick Actions */
+    .qa-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 768px) {
+      .qa-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .qa-btn {
+      padding: 16px;
+      background: rgba(5,8,15,0.5);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.25s;
+    }
+    .qa-btn:hover {
+      border-color: var(--border-h);
+      background: rgba(139,92,246,0.04);
+      transform: translateY(-1px);
+    }
+    .qa-btn .qico {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .qa-btn .qa-desc {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--emerald);
+      color: #6ee7b7;
+      font-size: 13px;
+      padding: 14px 22px;
+      border-radius: 12px;
+      display: none;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      animation: slideUp 0.35s ease;
+      z-index: 200;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAVIGATION -->
+<nav class="top-nav">
+  <div class="nav-left">
+    <div class="logo">
+      <div class="logo-icon">💼</div>
+      <div class="logo-text">Secure<span>Portal</span></div>
+    </div>
+    <div class="nav-links">
+      <div class="nav-link active">🏠 Dashboard</div>
+      <div class="nav-link">📋 My Tasks</div>
+      <div class="nav-link">📁 Documents</div>
+      <div class="nav-link">💬 Messages</div>
+      <div class="nav-link">📅 Calendar</div>
+      <div class="nav-link">⚙️ Settings</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="session-chip">⏱ <span id="headerTimer">00:00:00</span></div>
+    <div class="nav-avatar">
+      <div class="avatar-info">
+        <div class="avatar-name">John Employee</div>
+        <div class="avatar-role">Employee</div>
+      </div>
+      <div class="avatar-circle">E</div>
+    </div>
+    <button class="btn-signout" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1>My Workspace</h1>
+      <p id="greetLine"></p>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="bento-stats">
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon-wrap" style="background:var(--violet-glow);">📋</div>
+      </div>
+      <div class="stat-value">5</div>
+      <div class="stat-label">Assigned Tasks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon-wrap" style="background:rgba(16,185,129,0.1);">✅</div>
+      </div>
+      <div class="stat-value" id="doneCount">0</div>
+      <div class="stat-label">Completed Today</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon-wrap" style="background:rgba(245,158,11,0.1);">⏳</div>
+      </div>
+      <div class="stat-value">2</div>
+      <div class="stat-label">Pending Review</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon-wrap" style="background:rgba(244,63,94,0.1);">🔥</div>
+      </div>
+      <div class="stat-value">1</div>
+      <div class="stat-label">Overdue</div>
+    </div>
+  </div>
+
+  <!-- MAIN BENTO GRID -->
+  <div class="bento-main">
+    <!-- Tasks Panel -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">📋 Assigned Tasks <span class="panel-badge">5 total</span></div>
+        <span class="panel-count" id="progressText">0 / 5 complete</span>
+      </div>
+      <div class="task-list" id="taskList">
+        <div class="task-row" data-id="1">
+          <div class="task-check" onclick="toggleTask(1)"></div>
+          <div class="task-info">
+            <div class="task-title">Update Q3 financial report</div>
+            <div class="task-sub">Due: Today 5:00 PM</div>
+          </div>
+          <span class="priority p-high">High</span>
+        </div>
+        <div class="task-row" data-id="2">
+          <div class="task-check" onclick="toggleTask(2)"></div>
+          <div class="task-info">
+            <div class="task-title">Client presentation slides</div>
+            <div class="task-sub">Due: Tomorrow 10:00 AM</div>
+          </div>
+          <span class="priority p-high">High</span>
+        </div>
+        <div class="task-row" data-id="3">
+          <div class="task-check" onclick="toggleTask(3)"></div>
+          <div class="task-info">
+            <div class="task-title">Team standup notes</div>
+            <div class="task-sub">Due: Today 2:00 PM</div>
+          </div>
+          <span class="priority p-med">Medium</span>
+        </div>
+        <div class="task-row" data-id="4">
+          <div class="task-check" onclick="toggleTask(4)"></div>
+          <div class="task-info">
+            <div class="task-title">Review new onboarding docs</div>
+            <div class="task-sub">Due: This week</div>
+          </div>
+          <span class="priority p-low">Low</span>
+        </div>
+        <div class="task-row" data-id="5">
+          <div class="task-check" onclick="toggleTask(5)"></div>
+          <div class="task-info">
+            <div class="task-title">Submit timesheet</div>
+            <div class="task-sub">Due: Friday EOD</div>
+          </div>
+          <span class="priority p-low">Low</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column Stack -->
+    <div class="right-stack">
+      <!-- Session Timer -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">⏱ Session Time</div>
+        </div>
+        <div class="session-box">
+          <div class="session-clock" id="sessionClock">00:00:00</div>
+          <div class="session-sub">Elapsed since authentication</div>
+          <div class="progress-wrap">
+            <div class="progress-bar" id="progressBar" style="width:0%"></div>
+          </div>
+          <div class="session-detail">
+            <span>Started: <span id="loginTimeDisplay">--:--</span></span>
+            <span>Max: 8h 00m</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Report -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">📝 Submit Report</div>
+        </div>
+        <textarea id="reportText" placeholder="Describe your work progress, completed tasks, or any blockers…"></textarea>
+        <button class="btn-submit" onclick="submitReport()">Submit Report →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM GRID -->
+  <div class="bottom-grid">
+    <!-- Completed Tasks -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">✅ Completed Tasks</div>
+      </div>
+      <div class="task-list" id="completedList">
+        <div class="completed-placeholder">No tasks completed yet — check off tasks above!</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">⚡ Quick Actions</div>
+      </div>
+      <div class="qa-grid">
+        <button class="qa-btn" onclick="showToast('Opening messages…')">
+          <span class="qico">💬</span>Messages
+          <span class="qa-desc">Unread: 3</span>
+        </button>
+        <button class="qa-btn" onclick="showToast('Opening calendar…')">
+          <span class="qico">📅</span>Calendar
+          <span class="qa-desc">2 events today</span>
+        </button>
+        <button class="qa-btn" onclick="showToast('Opening files…')">
+          <span class="qico">📁</span>My Files
+          <span class="qa-desc">12 documents</span>
+        </button>
+        <button class="qa-btn" onclick="showToast('Leave request submitted!')">
+          <span class="qico">🏖️</span>Request Leave
+          <span class="qa-desc">Submit PTO</span>
+        </button>
+        <button class="qa-btn" onclick="showToast('IT support ticket created!')">
+          <span class="qico">🛠️</span>IT Support
+          <span class="qa-desc">Open a ticket</span>
+        </button>
+        <button class="qa-btn" onclick="logout()">
+          <span class="qico">🔒</span>Lock & Exit
+          <span class="qa-desc">End session</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── ACCESS CONTROL ──
+  (function guard(){
+    const role = sessionStorage.getItem('auth_role');
+    if (!role) { window.location.href = 'login.html'; return; }
+    if (role !== 'employee') {
+      sessionStorage.setItem('access_denied_msg', 'You do not have employee access or are attempting to access the wrong portal.');
+      window.location.href = 'login.html';
+    }
+  })();
+
+  // Greet
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greetLine').textContent = greet + ', John — you have 5 tasks assigned today.';
+
+  // Show login start time
+  const loginTime = parseInt(sessionStorage.getItem('auth_time')) || Date.now();
+  const loginDate = new Date(loginTime);
+  document.getElementById('loginTimeDisplay').textContent =
+    String(loginDate.getHours()).padStart(2,'0') + ':' + String(loginDate.getMinutes()).padStart(2,'0');
+
+  // Session timer
+  function updateTimer(){
+    const elapsed = Math.floor((Date.now() - loginTime) / 1000);
+    const hh = String(Math.floor(elapsed/3600)).padStart(2,'0');
+    const mm = String(Math.floor((elapsed%3600)/60)).padStart(2,'0');
+    const ss = String(elapsed%60).padStart(2,'0');
+    const str = `${hh}:${mm}:${ss}`;
+    document.getElementById('sessionClock').textContent = str;
+    document.getElementById('headerTimer').textContent = str;
+    const pct = Math.min((elapsed / 28800) * 100, 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+  updateTimer();
+  setInterval(updateTimer, 1000);
+
+  // Task toggle
+  let done = new Set();
+  function toggleTask(id){
+    const row = document.querySelector(`[data-id="${id}"]`);
+    const check = row.querySelector('.task-check');
+    const title = row.querySelector('.task-title');
+    const completedList = document.getElementById('completedList');
+
+    if (done.has(id)) {
+      done.delete(id);
+      check.classList.remove('done');
+      check.textContent = '';
+      title.classList.remove('done-text');
+      const existing = document.getElementById('comp-' + id);
+      if(existing) existing.remove();
+      if(done.size === 0){
+        completedList.innerHTML = '<div class="completed-placeholder">No tasks completed yet — check off tasks above!</div>';
+      }
+    } else {
+      done.add(id);
+      check.classList.add('done');
+      check.textContent = '✓';
+      title.classList.add('done-text');
+      const emptyMsg = completedList.querySelector('.completed-placeholder');
+      if(emptyMsg) emptyMsg.remove();
+      const clone = document.createElement('div');
+      clone.id = 'comp-' + id;
+      clone.className = 'task-row';
+      clone.style.opacity = '.65';
+      clone.innerHTML = `<div class="task-check done" style="font-size:12px;color:#fff;">✓</div><div class="task-info"><div class="task-title" style="text-decoration:line-through;color:var(--muted);">${title.textContent}</div><div class="task-sub">Marked complete just now</div></div>`;
+      completedList.appendChild(clone);
+    }
+    document.getElementById('doneCount').textContent = done.size;
+    document.getElementById('progressText').textContent = done.size + ' / 5 complete';
+  }
+
+  function submitReport(){
+    const t = document.getElementById('reportText');
+    if(!t.value.trim()){
+      showToast('Please write something before submitting!');
+      return;
+    }
+    showToast('Report submitted successfully!');
+    t.value = '';
+  }
+
+  function logout(){
+    sessionStorage.clear();
+    window.location.href = 'login.html';
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = '✅ ' + msg;
+    t.style.display = 'block';
+    setTimeout(()=>{ t.style.display = 'none'; }, 2800);
+  }
+</script>
+</body>
+</html>
