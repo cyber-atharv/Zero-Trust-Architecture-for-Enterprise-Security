@@ -12,7 +12,6 @@
 # 🔐 Zero Trust Architecture Enterprise Security Framework
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Project-Minor%20Project%20II-blue?style=for-the-badge" alt="Project"/>
   <img src="https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge" alt="Status"/>
   <img src="https://img.shields.io/badge/Security-Zero%20Trust-orange?style=for-the-badge" alt="Security"/>
   <img src="https://img.shields.io/badge/Platform-Docker-blue?style=for-the-badge" alt="Platform"/>
@@ -24,15 +23,13 @@
 
 ---
 
-## 👤 Author Information
+## 👤 Project Information
 
 | 🏷️ Field | 📝 Details |
 | :--- | :--- |
-| **Name** | Atharv Hogade |
-| **Project** | Minor Project II |
-| **Organization** | Naviotech Solution Pvt Ltd |
+| **Organization** | Novitech Solution Pvt Ltd |
 | **Domain** | Cybersecurity · Zero Trust Architecture |
-| **Year** | july -- batch 2026 |
+| **Year** | 2026 |
 
 ---
 
@@ -181,7 +178,7 @@ Zero-Trust-Architecture-Enterprise-Security/
 ├── report/
 │   └── 1_Project_Overview.docx ...
 ├── presentation/
-│   └── ZTA_Presentation_HimanshuSoni.pptx ...
+│   └── Zero_Trust_Architecture_Blueprint.pptx ...
 └── screenshots/
     └── 01_Docker_Desktop_Container_Running.png ...
 ```
@@ -200,11 +197,11 @@ Zero-Trust-Architecture-Enterprise-Security/
 
 ---
 
-## 📄 License & Credits
+## 📄 License
 
 This project is licensed under the **MIT License** — free to use, modify, and distribute with attribution.
 
 <p align="center">
   <b>Zero Trust Architecture · Cybersecurity</b><br/>
-  Made with ❤️ by Atharv Hogade | Naviotech Solution Pvt Ltd
+  Novitech Solution Pvt Ltd
 </p>
