@@ -1,20 +1,20 @@
-# Step 3: Design a Zero Trust Framework
+# 🏗️ Step 3: Design a Zero Trust Framework
 
-A comprehensive Zero Trust framework incorporates multiple layers of security to ensure data and resources are protected regardless of their location.
+> [!TIP]
+> **Objective:** Architect a comprehensive framework that incorporates identity, segmentation, and encryption across the enterprise.
 
-## Core Pillars of the Framework
+## 📋 Overview
+A comprehensive Zero Trust framework incorporates multiple layers of security to ensure data and resources are protected regardless of their location on the network.
 
-1. **Identity Verification**
-   - Continuously authenticate and authorize all users, devices, and applications.
-   - Utilize Identity and Access Management (IAM) and Multi-Factor Authentication (MFA).
+## 🔍 Core Pillars of the Framework
 
-2. **Micro-segmentation**
-   - Divide the network into smaller, isolated segments.
-   - Restrict lateral movement for attackers; if one segment is compromised, others remain secure.
-   - Apply specific security policies to each segment.
+| Pillar | Strategy & Enforcement |
+| :--- | :--- |
+| **Identity Verification** | Continuously authenticate and authorize all users, devices, and applications. Utilize centralized Identity and Access Management (IAM) systems. |
+| **Micro-segmentation** | Divide the network into smaller, isolated segments. This restricts lateral movement for attackers, ensuring a compromise in one segment does not spread. |
+| **Encryption** | Data must be encrypted both at rest (stored data) and in transit (data moving across networks). Utilize TLS/SSL for all web communications. |
 
-3. **Encryption**
-   - Data must be encrypted both at rest (stored data) and in transit (data moving across networks).
-   - Use TLS/SSL for web communications to prevent interception.
-
-By combining identity verification, micro-segmentation, and encryption, the enterprise ensures a robust Zero Trust Architecture.
+## 🛠️ Action Items
+- [x] Draft network segmentation maps
+- [x] Define encryption standards (TLS 1.3, AES-256)
+- [x] Integrate IAM identity providers

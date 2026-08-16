@@ -31,7 +31,7 @@
 | **Project**      | Minor Project II                        |
 | **Organization** | Naviotech Solution Pvt Ltd              |
 | **Domain**       | Cybersecurity · Zero Trust Architecture |
-| **Year**         | 2025–2026                               |
+| **Year**         | july -- batch 2026                               |
 
 ---
 
