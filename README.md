@@ -1,105 +1,80 @@
 <div align="center">
 
-```
+```text
 ███████╗███████╗██████╗  ██████╗     ████████╗██████╗ ██╗   ██╗███████╗████████╗
 ╚══███╔╝██╔════╝██╔══██╗██╔═══██╗    ╚══██╔══╝██╔══██╗██║   ██║██╔════╝╚══██╔══╝
   ███╔╝ █████╗  ██████╔╝██║   ██║       ██║   ██████╔╝██║   ██║███████╗   ██║   
  ███╔╝  ██╔══╝  ██╔══██╗██║   ██║       ██║   ██╔══██╗██║   ██║╚════██║   ██║   
 ███████╗███████╗██║  ██║╚██████╔╝       ██║   ██║  ██║╚██████╔╝███████║   ██║   
 ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝        ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝  
-  
 ```
 
 # 🔐 Zero Trust Architecture Enterprise Security Framework
 
-![Project](https://img.shields.io/badge/Project-Minor%20Project%20II-blue)
-![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
-![Security](https://img.shields.io/badge/Security-Zero%20Trust-orange)
-![Platform](https://img.shields.io/badge/Platform-Docker-blue)
-![Year](https://img.shields.io/badge/Year-2025--2026-lightgrey)
-![License](https://img.shields.io/badge/License-MIT-green)
+<p align="center">
+  <img src="https://img.shields.io/badge/Project-Minor%20Project%20II-blue?style=for-the-badge" alt="Project"/>
+  <img src="https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge" alt="Status"/>
+  <img src="https://img.shields.io/badge/Security-Zero%20Trust-orange?style=for-the-badge" alt="Security"/>
+  <img src="https://img.shields.io/badge/Platform-Docker-blue?style=for-the-badge" alt="Platform"/>
+</p>
 
-> A practical implementation of **Zero Trust Architecture (ZTA)** that simulates enterprise-grade security using Docker containers, authentication mechanisms, Role-Based Access Control (RBAC), and continuous access verification.
+> **A practical implementation of Zero Trust Architecture (ZTA) simulating enterprise-grade security utilizing Docker containers, continuous access verification, and robust Role-Based Access Control (RBAC).**
 
----
-
-## 👤 Author
-
-| Field            | Details                                 |
-| ---------------- | --------------------------------------- |
-| **Name**         | atharv hogade                           |
-| **Project**      | Minor Project II                        |
-| **Organization** | Naviotech Solution Pvt Ltd              |
-| **Domain**       | Cybersecurity · Zero Trust Architecture |
-| **Year**         | july -- batch 2026                               |
+</div>
 
 ---
 
-## 📋 Table of Contents
+## 👤 Author Information
 
-* [Overview](#-overview)
-* [Objectives](#-objectives)
-* [Zero Trust Principles](#-zero-trust-principles)
-* [System Architecture](#-system-architecture)
-* [Security Components](#-security-components)
-* [Methodology](#-methodology)
-* [Implementation](#-implementation)
-* [Threat Simulations](#-threat-simulations)
-* [Results](#-results)
-* [Repository Structure](#-repository-structure)
-* [Technologies Used](#-technologies-used)
-* [Future Enhancements](#-future-enhancements)
-* [References](#-references)
-* [License](#-license)
+| 🏷️ Field | 📝 Details |
+| :--- | :--- |
+| **Name** | Atharv Hogade |
+| **Project** | Minor Project II |
+| **Organization** | Naviotech Solution Pvt Ltd |
+| **Domain** | Cybersecurity · Zero Trust Architecture |
+| **Year** | july -- batch 2026 |
 
 ---
 
-## 📌 Overview
+## 📌 Executive Summary
 
-Traditional network security assumes that users and devices inside the network can be trusted. However, modern cyber threats frequently originate from compromised internal accounts and insider threats.
+Traditional network security incorrectly assumes that devices inside the network can be inherently trusted. However, modern cyber threats originate from compromised internal accounts and insider threats just as often as external vectors.
 
-This project implements a **Zero Trust Architecture (ZTA)** model where every access request must be authenticated, authorized, and continuously validated regardless of network location.
+This project implements a **Zero Trust Architecture (ZTA)** model where **every access request** must be authenticated, authorized, and continuously validated regardless of network location.
 
-The framework demonstrates secure enterprise access management through Docker-based deployment and role-based authorization controls.
-
----
-
-## 🎯 Objectives
+<details>
+<summary><b>🎯 Core Objectives (Click to Expand)</b></summary>
+<br>
 
 1. Implement Zero Trust Architecture principles in a simulated enterprise environment.
-2. Enforce authentication and authorization before resource access.
-3. Apply Role-Based Access Control (RBAC) policies.
-4. Demonstrate Docker-based security deployment.
+2. Enforce strict authentication and authorization before resource access.
+3. Apply comprehensive Role-Based Access Control (RBAC) policies.
+4. Demonstrate secure, isolated Docker-based security deployment.
 5. Simulate insider and external threat scenarios.
-6. Evaluate security effectiveness and access restrictions.
+6. Evaluate security effectiveness and dynamic access restrictions.
+</details>
 
 ---
 
-## 🛡️ Zero Trust Principles
+## 🛡️ Zero Trust Principles & Architecture
 
-### 1. Never Trust, Always Verify
+The framework relies heavily on continuous identity validation and the concept of "Least Privilege."
 
-Every user and device must be authenticated before access.
+### 🔑 Security Components
 
-### 2. Least Privilege Access
+| Component | Purpose |
+| :--- | :--- |
+| **Authentication** | Verify user identity explicitly |
+| **Authorization** | Grant approved access based strictly on roles |
+| **RBAC** | Distribute Role-Based permissions |
+| **Session Control** | Secure and monitor user sessions in real-time |
+| **Access Policies** | Restrict unauthorized actions dynamically |
+| **Threat Monitoring** | Detect anomalous or suspicious activity |
+| **Docker Isolation** | Containerized micro-segmentation |
 
-Users receive only the permissions required for their role.
-
-### 3. Continuous Verification
-
-Access requests are continuously validated.
-
-### 4. Assume Breach
-
-The system is designed with the assumption that attackers may already exist inside the network.
-
-### 5. Micro-Segmentation
-
-Resources are logically separated to reduce attack surfaces.
-
----
-
-## 🏗️ System Architecture
+<details>
+<summary><b>🏗️ View System Architecture Diagram</b></summary>
+<br>
 
 ```text
                     ┌───────────────┐
@@ -127,217 +102,109 @@ Resources are logically separated to reduce attack surfaces.
                        ▼
              Protected Resources
 ```
+</details>
 
 ---
 
-## 🔒 Security Components
+## ⚙️ Implementation & Deployment
 
-| Component         | Purpose                       |
-| ----------------- | ----------------------------- |
-| Authentication    | Verify user identity          |
-| Authorization     | Grant approved access         |
-| RBAC              | Role-based permissions        |
-| Session Control   | Secure user sessions          |
-| Access Policies   | Restrict unauthorized actions |
-| Threat Monitoring | Detect suspicious activity    |
-| Docker Isolation  | Containerized deployment      |
-
----
-
-## 🔬 Methodology
-
-1. Design enterprise security architecture.
-2. Create Dockerized application environment.
-3. Implement authentication workflows.
-4. Configure RBAC policies.
-5. Deploy employee and administrator dashboards.
-6. Simulate cyber attack scenarios.
-7. Evaluate effectiveness of security controls.
-8. Document findings and recommendations.
-
----
-
-## ⚙️ Implementation
-
-### Authentication Layer
-
-* User login verification
-* Credential validation
-* Session management
-
-### Authorization Layer
-
-* Role-based access control
-* Access restrictions
-* Dashboard separation
-
-### Docker Deployment
+### Quick Start with Docker
 
 ```bash
+# 1. Build the container image
 docker build -t zta-security .
-```
 
-```bash
+# 2. Run the container locally mapped to port 9090
 docker run -d -p 9090:80 zta-security
-```
 
-```bash
+# 3. Verify running containers
 docker ps
 ```
-
-Application URL:
-
-```text
-http://localhost:9090
-```
+> **Application URL:** [http://localhost:9090](http://localhost:9090)
 
 ---
 
-## ⚠️ Threat Simulations
+## ⚠️ Threat Simulations & Results
 
-### Insider Threat Scenario
+The architecture has undergone rigorous threat testing to ensure stability and security.
 
-**Attack:**
-Employee attempts to access administrator resources.
+| Test Scenario | Result |
+| :--- | :--- |
+| **Authentication Validation** | ✅ Passed |
+| **Authorization Enforcement** | ✅ Passed |
+| **RBAC Controls** | ✅ Passed |
+| **Dashboard Isolation** | ✅ Passed |
+| **URL Manipulation Prevention** | ✅ Passed |
+| **Insider Threat Protection** | ✅ Passed |
+| **Docker Deployment Security**| ✅ Passed |
 
-**Result:**
-Access denied through RBAC enforcement.
-
----
-
-### External Threat Scenario
-
-**Attack:**
-Unauthorized user attempts direct dashboard access through URL manipulation.
-
-**Result:**
-User redirected to authentication page.
-
----
-
-### Privilege Escalation Attempt
-
-**Attack:**
-Normal user attempts administrative actions.
-
-**Result:**
-Request blocked by authorization policies.
-
----
-
-## 📊 Results
-
-| Test Scenario               | Result   |
-| --------------------------- | -------- |
-| Authentication Validation   | ✅ Passed |
-| Authorization Enforcement   | ✅ Passed |
-| RBAC Controls               | ✅ Passed |
-| Dashboard Isolation         | ✅ Passed |
-| URL Manipulation Prevention | ✅ Passed |
-| Insider Threat Protection   | ✅ Passed |
-| Docker Deployment           | ✅ Passed |
-
----
-
-## 🔍 Key Findings
+<details>
+<summary><b>🔍 View Key Findings</b></summary>
+<br>
 
 1. Zero Trust significantly reduces unauthorized access risks.
 2. RBAC effectively enforces least-privilege principles.
-3. Continuous verification improves enterprise security posture.
+3. Continuous verification drastically improves the enterprise security posture.
 4. Docker provides secure and isolated deployment environments.
 5. Insider threat risks can be minimized through strict access control policies.
 6. Authentication alone is insufficient without proper authorization controls.
+</details>
 
 ---
 
 ## 📁 Repository Structure
 
+The project has been structured into intuitive categories:
+
 ```text
 Zero-Trust-Architecture-Enterprise-Security/
-│
 ├── README.md
-│
+├── LICENSE
 ├── docker/
 │   ├── Dockerfile
 │   ├── docker-compose.yml
 │   └── nginx.conf
-│
 ├── web/
 │   ├── login.html
 │   ├── employee_dashboard.html
 │   └── admin_dashboard.html
-│
 ├── documentation/
+│   ├── step1_zero_trust_principles.md
+│   ├── step2_authentication_models.md
+│   ├── step3_zero_trust_framework.md
+│   ├── step4_enterprise_simulation.md
+│   ├── step5_access_control_policies.md
+│   ├── step6_threat_testing.md
+│   ├── step7_results_and_improvements.md
 │   ├── setup_guide_docker.md
-│   ├── rbac_policy.md
-│   ├── insider_threat_test.md
-│   ├── external_threat_test.md
-│   └── results.md
-│
+│   └── rbac_policy.md ...
 ├── report/
-│   └── ZeroTrust_Report.docx
-│
+│   └── 1_Project_Overview.docx ...
 ├── presentation/
-│   └── ZeroTrustArchitecture.pptx
-│
-├── screenshots/
-│   ├── login_page.png
-│   ├── employee_dashboard.png
-│   ├── admin_dashboard.png
-│   ├── docker_running.png
-│   └── security_testing.png
-│
-└── references/
-    └── bibliography.txt
+│   └── ZTA_Presentation_HimanshuSoni.pptx ...
+└── screenshots/
+    └── 01_Docker_Desktop_Container_Running.png ...
 ```
-
----
-
-## 🛠️ Technologies Used
-
-* Docker
-* Docker Compose
-* Nginx
-* HTML5
-* CSS3
-* JavaScript
-* RBAC
-* Zero Trust Architecture
 
 ---
 
 ## 🚀 Future Enhancements
 
-* Multi-Factor Authentication (MFA)
-* LDAP / Active Directory Integration
-* JWT-Based Authentication
-* Kubernetes Deployment
-* Security Information and Event Management (SIEM)
-* Real-Time Threat Detection
-* Network Micro-Segmentation
+- **Multi-Factor Authentication (MFA)**
+- **LDAP / Active Directory Integration**
+- **JWT-Based Authentication**
+- **Kubernetes Deployment & Orchestration**
+- **Security Information and Event Management (SIEM)**
+- **Real-Time Threat Detection**
+- **Network Micro-Segmentation Implementation**
 
 ---
 
-## 📚 References
-
-| #   | Source                                  |
-| --- | --------------------------------------- |
-| [1] | NIST SP 800-207 Zero Trust Architecture |
-| [2] | NIST Cybersecurity Framework v2.0       |
-| [3] | OWASP Access Control Guidelines         |
-| [4] | Docker Documentation                    |
-| [5] | CISA Zero Trust Maturity Model          |
-| [6] | Microsoft Zero Trust Security Model     |
-
----
-
-## 📄 License
+## 📄 License & Credits
 
 This project is licensed under the **MIT License** — free to use, modify, and distribute with attribution.
 
----
-
 <p align="center">
-  <b>Zero Trust Architecture · Cybersecurity · 2025–2026</b><br/>
-  Made with ❤️ by atharv hogade | Naviotech Solution Pvt Ltd
+  <b>Zero Trust Architecture · Cybersecurity</b><br/>
+  Made with ❤️ by Atharv Hogade | Naviotech Solution Pvt Ltd
 </p>
